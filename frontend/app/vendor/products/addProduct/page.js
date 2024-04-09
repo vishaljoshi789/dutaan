@@ -1,6 +1,28 @@
-import React from 'react'
+'use client'
+import AuthContext from '@/app/context/AuthContext';
+import React, { useState, useEffect, useContext } from 'react'
 
 export default function addProduct() {
+
+  let { baseURL } = useContext(AuthContext)
+  let [ category, setCategory ] = useState([]);
+  let [ event, setEvent ] = useState([]);
+
+  let getCategory = async () => {
+    let response = await fetch(`${baseURL}/getCategory/`);
+    let data = await response.json();
+    setCategory(data)
+  }
+  let getEvent = async () => {
+    let response = await fetch(`${baseURL}/getEvent/`);
+    let data = await response.json();
+    setEvent(data)
+  }
+  useEffect(()=>{
+    getCategory();
+    getEvent();
+  }, [])
+
   return (
     <div className="min-h-screen p-6 bg-[#F5f5dc] flex items-center justify-center">
   <div className="container max-w-screen-lg mx-auto">
@@ -36,14 +58,12 @@ export default function addProduct() {
                 <input type="text" name="price" id="price" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
               </div>
 
-              
-
-              
               <div className="md:col-span-3">
                 <label htmlFor="category">Category</label>
                 <select name="category" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50">
-                  <option value="Male" >Male</option>
-                  <option value="Female">Female</option>
+                  {category.map((item)=>
+                    <option key={item.id} value={item['category']} >{item['category']}</option>
+                  )}
                 </select>
               </div>
 

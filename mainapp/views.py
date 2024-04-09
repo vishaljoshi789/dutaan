@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor
-from .serializers import UserSerializer, ProductSerializer, AddressSerializer, VendorSerializer, CustomerSerializer 
+from .models import CustomUser, Product, Customer, Vendor, Category, Event
+from .serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer 
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 import json
@@ -58,6 +58,22 @@ def get_vendor_products(request):
         user = request.user
         products = user.product_set.all()
         serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+    
+# @permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_category(request):
+    if request.method == "GET":
+        category = Category.objects.all()
+        serializer = CategorySerializer(category, many=True)
+        return Response(serializer.data)
+    
+# @permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_event(request):
+    if request.method == "GET":
+        event = Event.objects.all()
+        serializer = EventSerializer(event, many=True)
         return Response(serializer.data)
     
 

@@ -146,7 +146,8 @@ export const AuthProvider = ({children}) => {
         userInfo: userInfo,
         setUserInfo: setUserInfo,
         setUser: setUser,
-        setAuthToken, setAuthToken
+        setAuthToken, setAuthToken,
+        baseURL:baseURL,
     }
 
     

@@ -12,4 +12,6 @@ urlpatterns = [
     path('getAllUsers/', views.get_all_user),
     path('get-user-data/', views.get_user_data),
     path('update-user-data/', views.update_user_data),
+    path('getCategory/', views.get_category),
+    path('getEvent/', views.get_event),
 ]

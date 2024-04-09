@@ -38,7 +38,16 @@ class Vendor(models.Model):
     aadhar = models.CharField(max_length=15, null=True, blank=True)
 
 class Category(models.Model):
-    category_name = models.CharField(max_length = 100, null=True, blank=True)
+    category = models.CharField(max_length = 100, null=True, blank=True)
+
+    def __str__(self):
+        return self.category_name
+
+class Event(models.Model):
+    event = models.CharField(max_length = 100, null=True, blank=True)
+
+    def __str__(self):
+        return self.event
 
 
 class Product(models.Model):
@@ -53,6 +62,14 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+
+class ProductEvent(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    def __str__(self):
+        return self.event
+
 
 
 class ProductVideo(models.Model):
