@@ -24,21 +24,21 @@ const Register = () => {
             <form method='post' onSubmit={registerUser} className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
               <div className="md:col-span-5">
                 <label htmlFor="full_name">Full Name</label>
-                <input type="text" name="name" id="full_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" />
+                <input type="text" name="name" id="full_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" required/>
               </div>
 
               <div className="md:col-span-5">
                 <label htmlFor="email">Email Address</label>
-                <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="email@domain.com" />
+                <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="email@domain.com" required/>
               </div>
 
               <div className="md:col-span-2">
                 <label htmlFor="password">Password</label>
-                <input type="password" name="password1" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="************" />
+                <input type="password" name="password1" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="************" required/>
               </div>
               <div className="md:col-span-2">
                 <label htmlFor="password">Confirm Password</label>
-                <input type="password" name="password2" id="password2" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="************" />
+                <input type="password" name="password2" id="password2" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="************" required/>
               </div>
 
               
@@ -55,7 +55,7 @@ const Register = () => {
 
               <div className="md:col-span-3">
                 <label htmlFor="phone">Phone Number</label>
-                <input type="text" name="phone" id="phone" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="95XXXXXXXX" />
+                <input type="number" name="phone" id="phone" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="95XXXXXXXX" required/>
               </div>
 
 
@@ -70,24 +70,24 @@ const Register = () => {
               {role==="Vendor"? <>
                 <div className="md:col-span-5">
                   <label htmlFor="store_name">Store Name</label>
-                  <input type="text" name="store_name" id="store_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Store Name Here..." />
+                  <input type="text" name="store_name" id="store_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Store Name Here..." required/>
                 </div>
                 <div className="md:col-span-5">
                   <label htmlFor="store_description">Store Description</label>
-                  <textarea name="store_description" id="store_description" className="h-20 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Store description Here..." />
+                  <textarea name="store_description" id="store_description" className="h-20 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Store description Here..." required/>
                   
                 </div>
                 <div className="md:col-span-5">
                   <label htmlFor="gst">GST Number</label>
-                  <input type="text" name="gst" id="gst" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your GST Number Here..." />
+                  <input type="text" name="gst" id="gst" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your GST Number Here..." required/>
                 </div>
                 <div className="md:col-span-3">
                   <label htmlFor="aadhar">Aadhar Number</label>
-                  <input type="text" name="aadhar" id="aadhar" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Aadhar Number Here..." />
+                  <input type="text" name="aadhar" id="aadhar" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Aadhar Number Here..." required/>
                 </div>
                 <div className="md:col-span-2">
                   <label htmlFor="aadhar">Passport Size Image</label>
-                  <input type="file" name="image" id="image" className="h-10 border mt-1 rounded px-4 p-2 w-full bg-gray-50" />
+                  <input type="file" name="image" id="image" className="h-10 border mt-1 rounded px-4 p-2 w-full bg-gray-50" required/>
                 </div>
                 </>
               :
@@ -97,30 +97,30 @@ const Register = () => {
 
               <div className="md:col-span-3">
                 <label htmlFor="address">Address / Street</label>
-                <input type="text" name="address" id="address" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
+                <input type="text" name="address" id="address" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" required/>
               </div>
 
               <div className="md:col-span-2">
                 <label htmlFor="city">City</label>
-                <input type="text" name="city" id="city" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
+                <input type="text" name="city" id="city" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" required/>
               </div>
 
               <div className="md:col-span-2">
                 <label htmlFor="country">Country / region</label>
-                  <input name="country" id="country" placeholder="Country" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" />
+                  <input name="country" id="country" placeholder="Country" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" required/>
                  
               </div>
 
               <div className="md:col-span-2">
                 <label htmlFor="state">State / province</label>
-                  <input name="state" id="state" placeholder="State" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" />
+                  <input name="state" id="state" placeholder="State" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" required/>
                   
                   
               </div>
 
               <div className="md:col-span-1">
                 <label htmlFor="zipcode">Zipcode</label>
-                <input type="text" name="zipcode" id="zipcode" className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" defaultValue="" />
+                <input type="text" name="zipcode" id="zipcode" className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" defaultValue="" required/>
               </div>
 
               

@@ -14,4 +14,5 @@ urlpatterns = [
     path('update-user-data/', views.update_user_data),
     path('getCategory/', views.get_category),
     path('getEvent/', views.get_event),
+    path('addProduct/', views.add_product),
 ]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Product, Address, Customer, Event, Vendor, Product, ProductImage, ProductVideo, ProductSpecification, Category
+from .models import CustomUser, Product, Address, Customer, Event, Vendor, Product, ProductImage, ProductSpecification, Category, ProductCategory, ProductEvent
 from django.contrib.auth.hashers import make_password
 
 
@@ -113,12 +113,8 @@ class VendorSerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'product', 'image']
 
-class ProductVideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductVideo
-        fields = ['id', 'video']
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -135,29 +131,44 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ['id', 'event']
 
+class ProductCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategory
+        fields = ['id', 'category', 'product']
+
+class ProductEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductEvent
+        fields = ['id', 'event', 'product']
+
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True)
-    videos = ProductVideoSerializer(many=True)
     specifications = ProductSpecificationSerializer(many=True)
+    category = ProductCategorySerializer(many=True)
+    event = ProductEventSerializer(many=True)
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'available_stock', 'is_active', 'category', 'vendor', 'images', 'videos', 'specifications']
+        fields = ['id', 'images', 'specifications', 'category', 'event', 'name', 'description', 'mrp', 'sell_price', 'price', 'stock_quantity', 'is_active', 'vendor', 'video']
 
     def create(self, validated_data):
         images_data = validated_data.pop('images', [])
-        videos_data = validated_data.pop('videos', [])
         specifications_data = validated_data.pop('specifications', [])
+        categories = validated_data.pop("category", [])
+        events = validated_data.pop("event", [])
         product = Product.objects.create(**validated_data)
         
         for image_data in images_data:
-            ProductImage.objects.create(product=product, **image_data)
-        
-        for video_data in videos_data:
-            ProductVideo.objects.create(product=product, **video_data)
-        
+            ProductImage.objects.create(product=product, image=image_data['image'])
+
         for spec_data in specifications_data:
-            ProductSpecification.objects.create(product=product, **spec_data)
+            ProductSpecification.objects.create(product=product, key=spec_data['key'], value=spec_data['value'])
+
+        for category in categories:
+            ProductCategory.objects.create(product=product, category = category['category'])
+
+        for event in events:
+            ProductEvent.objects.create(product=product, event = event['event'])
 
         
         return product
@@ -185,12 +196,12 @@ class ProductSerializer(serializers.ModelSerializer):
         # Update or create product videos
         for video_data in videos_data:
             video_id = video_data.get('id', None)
-            if video_id:
-                video_instance = ProductVideo.objects.get(id=video_id, product=instance)
-                video_instance.video = video_data.get('video', video_instance.video)
-                video_instance.save()
-            else:
-                ProductVideo.objects.create(product=instance, **video_data)
+            # if video_id:
+            #     video_instance = ProductVideo.objects.get(id=video_id, product=instance)
+            #     video_instance.video = video_data.get('video', video_instance.video)
+            #     video_instance.save()
+            # else:
+            #     ProductVideo.objects.create(product=instance, **video_data)
         
         # Update or create product specifications
         for spec_data in specifications_data:

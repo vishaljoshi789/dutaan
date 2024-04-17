@@ -136,10 +136,57 @@ def get_user_data(request):
 @permission_classes([IsAdminUser])
 def update_user_data(request):
     if request.method == "POST":
-        print(request.data)
+        # print(request.data)
         user = CustomUser.objects.get(id = request.data["id"])
         serializer = UserSerializer(user, data = request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def add_product(request):
+    if request.method == "POST":
+        data = request.POST.copy()
+        data["specifications"] = json.loads(request.data["specification"])
+        data["category"] = json.loads(request.data["category"])
+        data["event"] = json.loads(request.data["event"])
+        images = []
+        category = []
+        event = []
+        for field, value in request.FILES.items():
+            if 'image' in field:
+                images.append({"image": request.FILES[field]})
+        for item in data['category']:
+            item = Category.objects.get(category=item)
+            category.append({"category": item.id})
+        for item in data['event']:
+            item = Event.objects.get(event=item)
+            event.append({"event": item.id})
+        video = request.FILES.pop('video', None)
+        data = json.dumps(data)
+        data = json.loads(data)
+        if len(images) > 0:
+            data['images'] = images
+        if len(category) > 0:
+            data['category'] = category
+        if len(event) > 0:      
+            data['event'] = event
+        # if data['image1'] == 'null':
+        #     data.pop('image1')
+        # category = data.pop("category")
+        # event = data.pop("event")
+        # specification = data.pop("specification")
+        if video != None:
+            data['video'] = video[0] 
+        else:
+            data.pop('video')
+        print(data)        
+        serializer = ProductSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

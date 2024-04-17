@@ -64,7 +64,7 @@ export const AuthProvider = ({children}) => {
     let registerUser = async (e) => {
         e.preventDefault();
         if(e.target.password1.value!==e.target.password2.value){
-            alert("Password does not match")
+            toast.error("Password Does Not Match")
             router.push('/auth/register')
             return
         }
@@ -109,7 +109,7 @@ export const AuthProvider = ({children}) => {
             loginTokenFetch(e.target.email.value, e.target.password.value)
         }else{
             let data = await response.json();
-            console.log(data)
+            // console.log(data)
             if(data['user']['email']){
                 toast.error("Email already registered")
             }

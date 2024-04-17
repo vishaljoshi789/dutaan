@@ -6,6 +6,14 @@ def user_directory_path(instance, filename):
   
     # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
     return 'user_{0}/{1}'.format(instance.username, filename) 
+def video_directory_path(instance, filename): 
+  
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
+    return 'product_{0}/{1}'.format(instance.name, filename) 
+def image_directory_path(instance, filename): 
+  
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
+    return 'product_{0}/{1}'.format("image", filename) 
 
 class CustomUser(AbstractUser):
     name = models.CharField(max_length = 50, null=True, blank=True)
@@ -41,7 +49,7 @@ class Category(models.Model):
     category = models.CharField(max_length = 100, null=True, blank=True)
 
     def __str__(self):
-        return self.category_name
+        return self.category
 
 class Event(models.Model):
     event = models.CharField(max_length = 100, null=True, blank=True)
@@ -58,27 +66,28 @@ class Product(models.Model):
     price = models.IntegerField(null=True, blank=True)
     sell_price = models.IntegerField(null=True, blank=True)
     stock_quantity = models.IntegerField(null=True, blank=True)
+    video = models.FileField(upload_to=video_directory_path, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
 
 class ProductEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
-    def __str__(self):
-        return self.event
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name="event")
+    # def __str__(self):
+    #     return self.product
 
+class ProductCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='category')
+    # def __str__(self):
+    #     return self.product
 
-
-class ProductVideo(models.Model):
-    product = models.ForeignKey(Product, related_name='videos', on_delete=models.CASCADE)
-    video = models.FileField(upload_to=user_directory_path)
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=user_directory_path)
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
+    image = models.ImageField(upload_to=image_directory_path, null=True, blank=True)
 
 class ProductSpecification(models.Model):
     product = models.ForeignKey(Product, related_name='specifications', on_delete=models.CASCADE)
