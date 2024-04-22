@@ -16,15 +16,18 @@ def image_directory_path(instance, filename):
     return 'product_{0}/{1}'.format("image", filename) 
 
 class CustomUser(AbstractUser):
+    status_choices = {"Active": "Active", "Inactive":"Inactive"}
     name = models.CharField(max_length = 50, null=True, blank=True)
     roles_choices = {"Customer": "Customer", "Vendor":"Vendor"}
     gender_choices = {"Male": "Male", "Female":"Female"}
+    
     email = models.EmailField(unique = True, null=False, blank=False)
     phone = models.CharField(max_length = 18, null=True, blank=True)
     # address = models.CharField(max_length = 255, null=True, blank=True)
     role = models.CharField(max_length=10, null=True, blank=True, choices=roles_choices)
     image = models.ImageField(upload_to=user_directory_path, null=True)
     gender = models.CharField(max_length=10, null=True, blank=True, choices=gender_choices)
+    status = models.CharField(default="Active", max_length=10, null=True, blank=True, choices=status_choices)
 
 class Address(models.Model):
     street_address = models.CharField(max_length=50, null=True, blank=True)
@@ -59,6 +62,7 @@ class Event(models.Model):
 
 
 class Product(models.Model):
+    status_choices = {"Active": "Active", "Inactive":"Inactive", "Banned":"Banned"}
     name = models.CharField(max_length = 255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, blank=True, null=True)
@@ -66,8 +70,9 @@ class Product(models.Model):
     price = models.IntegerField(null=True, blank=True)
     sell_price = models.IntegerField(null=True, blank=True)
     stock_quantity = models.IntegerField(null=True, blank=True)
+    image = models.ImageField(upload_to=image_directory_path, null=True, blank=True)
     video = models.FileField(upload_to=video_directory_path, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    status = models.CharField(default="Active", max_length=10, null=True, blank=True, choices=status_choices)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

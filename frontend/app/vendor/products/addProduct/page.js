@@ -36,7 +36,7 @@ export default function addProduct() {
   }
 
   const handleAddSpec = () => {
-    console.log(specsList)
+    // console.log(specsList)
     const newSpec = { key: "", value: "" };
     setSpecsList([...specsList, newSpec]);
   };
@@ -73,14 +73,14 @@ export default function addProduct() {
     let events = document.querySelectorAll('.events');
     setEventList([])
     events.forEach((e) => e.checked ? setEventList(i => [...i, e.value]) : console.log())
-    console.log(eventList)
+    // console.log(eventList)
   }
 
   let categorytListSetter = () => {
     let categories = document.querySelectorAll('.categories');
     setCategoryList([])
     categories.forEach((e) => e.checked ? setCategoryList(i => [...i, e.value]) : console.log())
-    console.log(categoryList)
+    // console.log(categoryList)
   }
 
   let submitProductForm = async (e) => {
@@ -103,8 +103,9 @@ export default function addProduct() {
     formData.append('stock_quantity', e.target.stock_quantity.value);
     formData.append('sell_price', e.target.price.value);
     formData.append('video', e.target.video.files[0]);
+    formData.append('image', e.target.image.files[0]);
     try{
-      let response = await api.post("/addProduct/", formData, {
+      let response = await api.post("/vendor/addProduct/", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'}})
           console.log(response.data)
@@ -143,27 +144,27 @@ export default function addProduct() {
                 <form method='post' className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5" onSubmit={submitProductForm}>
                   <div className="md:col-span-5">
                     <label htmlFor="full_name">Product Name</label>
-                    <input type="text" name="name" id="full_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" />
+                    <input type="text" name="name" id="full_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" required/>
                   </div>
 
                   <div className="md:col-span-5">
                     <label htmlFor="desc">Product Description</label>
-                    <textarea type="text" name="description" id="desc" rows="5" className="border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="Your Product Description here" />
+                    <textarea type="text" name="description" id="desc" rows="5" className="border mt-1 rounded px-4 w-full bg-gray-50" required defaultValue="" placeholder="Your Product Description here" />
                   </div>
 
                   <div className="md:col-span-2">
                     <label htmlFor="mrp">MRP</label>
-                    <input type="text" name="mrp" id="mrp" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
+                    <input type="number" name="mrp" id="mrp" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" required/>
                   </div>
 
                   <div className="md:col-span-2">
                     <label htmlFor="password">Price</label>
-                    <input type="text" name="price" id="price" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
+                    <input type="number" name="price" id="price" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" required/>
                   </div>
 
                   <div className="md:col-span-1">
                     <label htmlFor="stock_quantity">Stock Quantity</label>
-                    <input type="text" name="stock_quantity" id="stock_quantity" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
+                    <input type="number" name="stock_quantity" id="stock_quantity" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" required/>
                   </div>
 
                   <div className="md:col-span-5">
@@ -206,7 +207,13 @@ export default function addProduct() {
                       <button type='button' onClick={handleAddSpec} className="h-auto w-10"><Image src="/images/add.png" height={50} width={50} alt='add-icon'/></button>
                     </div>
                   </div>
+
                   <hr className='md:col-span-5' />
+
+                  <div className="md:col-span-5">
+                    <label htmlFor="cover_image">Cover Image</label>
+                    <input type="file" name="image" id="cover_image" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" defaultValue="" placeholder="" />
+                  </div>
 
                   <div className="md:col-span-5">
                     <label htmlFor="specs">Images</label>

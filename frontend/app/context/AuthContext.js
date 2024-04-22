@@ -21,6 +21,7 @@ export const AuthProvider = ({children}) => {
     let [loading, setLoading] = useState(true)
     let [userInfo, setUserInfo] = useState(null)
 
+
     useEffect(()=>{
         setUserInfo(localStorage.getItem('userInfo')?JSON.parse(localStorage.getItem('userInfo')):null);
         setAuthToken(localStorage.getItem('accessToken')?JSON.parse(localStorage.getItem('accessToken')):null);
@@ -117,23 +118,24 @@ export const AuthProvider = ({children}) => {
     }
 
 
-    let getUserDetails = async() => {
-        if(!userInfo){
-            let response = await axiosInstance.get('/userInfo/')
-            if(response.status === 200){
-                setUserInfo(response.data)
-                localStorage.setItem('userInfo', JSON.stringify(response.data))
-            } 
-        }
-    }
-
-
     let userLogout = () => {
         setAuthToken(null)
         setUser(null)
         setUserInfo(null)
         typeof window!=="undefined" && localStorage.removeItem('accessToken')
         typeof window!=="undefined" && localStorage.removeItem('userInfo')
+    }
+
+    let getUserDetails = async() => {
+        if(!userInfo){
+            let response = await axiosInstance.get('/userInfo/')
+            if(response.status === 200){
+                setUserInfo(response.data)
+                localStorage.setItem('userInfo', JSON.stringify(response.data))
+            }else{
+                userLogout()
+            } 
+        }
     }
 
 

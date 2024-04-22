@@ -1,12 +1,31 @@
 "use client"
-import { useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import AuthContext from "@/app/context/AuthContext"
 import Image from "next/image"
 import PrivateRoute from "@/app/utils/PrivateRoute"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import useAxios from "@/app/hooks/useAxios"
+import { redirect } from "next/navigation"
 export default function page() {
-    let  {userInfo} = useContext(AuthContext)
+    let  [ userInfo, setUserInfo ] = useState(null)
+    let api = useAxios()
+    let {userLogout} = useContext(AuthContext)
+    let getUserData = async() => {
+        try{
+            let response = await api.get('/userInfo/');
+            if(response.status===200){
+                setUserInfo(response.data)
+            }else{
+                userLogout()
+                redirect('/login/')
+            }
+        }catch(e){
+            userLogout()
+            redirect('/login/')
+        }
+    }
+    useEffect(()=>{getUserData()}, [])
     return (
         <PrivateRoute>
         {userInfo?<section className="text-gray-600 body-font bg-[#F5F5DC]">
