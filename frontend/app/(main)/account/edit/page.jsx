@@ -72,7 +72,7 @@ const EditProfile = () => {
 
               <div className="md:col-span-1">
                 <label htmlFor="zipcode">Zipcode</label>
-                <input type="text" name="zipcode" id="zipcode" className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" defaultValue={userInfo.address.zipcode} />
+                <input type="text" name="zipcode" id="zipcode" className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" defaultValue={userInfo.address.zip_code} />
               </div>
 
               
