@@ -8,21 +8,31 @@ import {
     Carousel,
     CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from "@/components/ui/carousel"
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 
 
 export default function Product() {
     let { baseURL } = useContext(AuthContext)
-    let api = useAxios()
+    let API = useAxios()
+    const [api, setApi] = useState()
     let param = useSearchParams()
     let id = param.get('id')
     let [productInfo, setProductInfo] = useState({})
     let [vendor, setVendor] = useState({})
+    let [activeImage, setActiveImage] = useState({})
 
     let getVendor = async (vendor) => {
-        let response = await api.get(`/getVendorName?id=${vendor}`)
+        let response = await API.get(`/getVendorName?id=${vendor}`)
         if (response.status === 200) {
             // console.log(response.data)
             setVendor(response.data)
@@ -30,15 +40,26 @@ export default function Product() {
     }
 
     let getProductInfo = async () => {
-        let response = await api.get(`/getProduct?id=${id}`)
+        let response = await API.get(`/getProduct?id=${id}`)
         if (response.status === 200) {
 
             getVendor(response.data.vendor)
             setProductInfo(response.data)
+            setActiveImage(0)
 
         }
     }
 
+
+    useEffect(() => {
+        if (!api) {
+            return
+        }
+
+        api.on("select", () => {
+            setActiveImage(api.selectedScrollSnap())
+        })
+    }, [api])
 
     useEffect(() => {
         getProductInfo();
@@ -46,28 +67,33 @@ export default function Product() {
 
     return (
         <section className="text-gray-600 body-font overflow-hidden">
-            <div className="container px-5 py-24 mx-auto">
-                <div className="lg:w-4/5 mx-auto flex flex-wrap">
-                    <div className="flex flex-col w-full lg:w-1/2 gap-5 items-center">
-                    <Carousel className="w-full">
-                        <CarouselContent>
-                            {productInfo.images && productInfo.images.map((item) =>
-                                <CarouselItem className='flex items-center justify-center w-full'>
+            <div className="py-16">
+                <div className="lg:w-4/5 w-full mx-auto flex flex-wrap">
+                    <div className="flex flex-col w-full lg:w-1/2 gap-5 items-center pt-16">
+                        <Carousel className="w-full bg-white" setApi={setApi}>
+                            <CarouselContent>
+                                {productInfo.images && productInfo.images.map((item) =>
+                                    <CarouselItem className='flex items-center justify-center w-full'>
 
-                                    <Image alt="product-img" height={0} width={0} sizes="100vw" className="lg:w-1/2 w-full lg:max-h-screen h-64 object-contain object-center rounded" src={`${baseURL}${item['image']}`} /></CarouselItem>
-                            )}
+                                        <Image alt="product-img" height={0} width={0} sizes="100vw" className="w-full h-64 object-contain object-center rounded" src={`${baseURL}${item['image']}`} /></CarouselItem>
+                                )}
 
-                        </CarouselContent>
-                        {/* <CarouselPrevious/> */}
-                        {/* <CarouselNext /> */}
-                    </Carousel>
-                            <div className="flex items-center justify-center w-1/2 gap-2">
-                    {productInfo.images && productInfo.images.map((item) =>
+                            </CarouselContent>
+                            {/* <CarouselPrevious/> */}
+                            {/* <CarouselNext /> */}
+                        </Carousel>
+                        <ScrollArea className="bg-white ">
+                            <div className="flex items-center justify-evenly gap-2 p-3">
+                                {productInfo.images && productInfo.images.map((item, index) =>
+                                    <>
+                                        <Image onClick={() => api.scrollTo(index)} alt="product-img" height={0} width={0} sizes="100vw" className={`w-20 h-20 object-contain object-center rounded ${index == activeImage && `border-black border-2`} `} src={`${baseURL}${item['image']}`} />
+                                    </>
+                                )}</div>
+                            <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                    </div>
 
-                                    <Image alt="product-img" height={0} width={0} sizes="100vw" className="w-20 h-20 object-contain object-center rounded" src={`${baseURL}${item['image']}`} />
-                            )}</div></div>
-
-                    <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+                    <div className="lg:w-1/2 w-full lg:pl-10 mt-6 lg:mt-0 p-5">
                         <h2 className="text-sm title-font text-gray-500 tracking-widest">{vendor.store_name}</h2>
                         <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{productInfo.name}</h1>
                         <div className="flex mb-4">
@@ -108,35 +134,31 @@ export default function Product() {
                             </span>
                         </div>
                         <p className="leading-relaxed">{productInfo.description}</p>
-                        <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-                            <div className="flex">
-                                <span className="mr-3">Color</span>
-                                <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-                                <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-                                <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
-                            </div>
-                            <div className="flex ml-6 items-center">
-                                <span className="mr-3">Size</span>
-                                <div className="relative">
-                                    <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-                                        <option>SM</option>
-                                        <option>M</option>
-                                        <option>L</option>
-                                        <option>XL</option>
-                                    </select>
-                                    <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
-                                            <path d="M6 9l6 6 6-6"></path>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
+                        <div className="flex flex-col mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
+                            <p className="text-xl w-full text-black">Specifications</p>
+                            <Table>
+                                {/* <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[100px]">Name</TableHead>
+                                        <TableHead>Value</TableHead>
+                                    </TableRow>
+                                </TableHeader> */}
+                                <TableBody>
+                                    {productInfo.specifications&&productInfo.specifications.map((item)=>
+                                        <TableRow>
+                                            <TableCell>{item.key}</TableCell>
+                                            <TableCell>{item.value}</TableCell>
+                                        </TableRow>
+                                    )}
+                                    
+                                </TableBody>
+                            </Table>
                         </div>
                         <div className="flex">
                             <div className="flex gap-5">
-                            <span className="title-font font-medium text-2xl text-gray-900 line-through">₹{productInfo.mrp}</span>
-                            <span className="title-font font-medium text-2xl text-gray-900">₹{productInfo.price?productInfo.price:productInfo.sell_price}</span></div>
-                            <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Button</button>
+                                <span className="title-font font-medium text-2xl text-gray-900 line-through">₹{productInfo.mrp}</span>
+                                <span className="title-font font-medium text-2xl text-gray-900">₹{productInfo.price ? productInfo.price : productInfo.sell_price}</span></div>
+                            <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Add to Cart</button>
                             <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                                 <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
