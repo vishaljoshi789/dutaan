@@ -2,9 +2,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor, Category, Event
-from .serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer 
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist
+from .serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer
+from rest_framework.permissions import IsAuthenticated
 import json
 
 @api_view(['POST'])
@@ -114,5 +114,32 @@ def get_vendor_name(request):
 def get_product_info(request):
     if request.method == "GET":
         product = Product.objects.get(id=request.GET.get("id"))
-        serializer = ProductSerializer(product)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        pserializer = ProductSerializer(product)
+        if request.user.is_authenticated:
+            user = request.user
+            if Wishlist.objects.filter(user=user, product=product).exists():
+                wishlist = Wishlist.objects.get(user=user, product=product)
+                wserializer = WishlistSerializer(wishlist)
+                return Response([pserializer.data, wserializer.data], status=status.HTTP_200_OK)
+        return Response([pserializer.data, []], status=status.HTTP_200_OK)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def toggle_wishtlist(request):
+    if request.method == "POST":
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        wishlist = []
+        if Wishlist.objects.filter(user=user, product=product).exists():
+            Wishlist.objects.filter(user=user, product=product).delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            data = {}
+            data['user'] = user.id
+            data['product'] = product.id
+            serializer = WishlistSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

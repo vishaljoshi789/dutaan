@@ -96,8 +96,22 @@ class ProductImage(models.Model):
 
 class ProductSpecification(models.Model):
     product = models.ForeignKey(Product, related_name='specifications', on_delete=models.CASCADE)
-    key = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
+    key = models.CharField(max_length=255, blank=True, null=True)
+    value = models.CharField(max_length=255, blank=True, null=True)
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(Product, related_name='review', on_delete=models.CASCADE)
+    review = models.IntegerField(null=True, blank=True)
+    feedback = models.TextField(null=True, blank=True)
+
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='cart', on_delete=models.CASCADE)
+    quantity = models.IntegerField(null=True, blank=True)
+
+class Wishlist(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='wishlist', on_delete=models.CASCADE)
 
 
 # class Order(models.Model):

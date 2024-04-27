@@ -12,5 +12,6 @@ urlpatterns = [
     path('getEvent/', views.get_event),
     path('getVendorName/', views.get_vendor_name),
     path('getProduct/', views.get_product_info),
+    path('toggleWishlist/', views.toggle_wishtlist),
 
 ]

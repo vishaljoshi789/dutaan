@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Product, Address, Customer, Event, Vendor, Product, ProductImage, ProductSpecification, Category, ProductCategory, ProductEvent
+from .models import CustomUser, Product, Address, Customer, Event, Vendor, Product, ProductImage, ProductSpecification, Category, ProductCategory, ProductEvent, Wishlist, Cart
 from django.contrib.auth.hashers import make_password
 
 
@@ -141,6 +141,8 @@ class ProductEventSerializer(serializers.ModelSerializer):
         model = ProductEvent
         fields = ['id', 'event', 'product']
 
+
+
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True)
     specifications = ProductSpecificationSerializer(many=True)
@@ -199,3 +201,12 @@ class ProductSerializer(serializers.ModelSerializer):
         
         return instance
 
+class WishlistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'user', 'product']
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = "__all__"
