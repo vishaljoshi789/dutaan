@@ -2,10 +2,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist
-from .serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer
+from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart
+from .serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer
 from rest_framework.permissions import IsAuthenticated
 import json
+
 
 @api_view(['POST'])
 def user_registration(request):
@@ -143,3 +144,64 @@ def toggle_wishtlist(request):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_cart(request):
+    if request.method == "GET":
+        user = request.user
+        cart = user.cart.all()
+        serializer = CartSerializer(cart, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_cart(request):
+    if request.method == "POST":
+        # print(request.data)
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product)
+            cart.quantity = cart.quantity+1
+            cart.save()
+            serializer = CartSerializer(cart)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            cart = Cart.objects.create(user = user, product=product, quantity=1)
+            cart.save()
+            serializer = CartSerializer(cart)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_cart(request):
+    if request.method == "POST":
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product)
+            if cart.quantity == 1:
+                cart.delete()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                cart.quantity -= 1
+                cart.save()
+                serializer = CartSerializer(cart)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_all_cart(request):
+    if request.method == "POST":
+        product = Product.objects.get(id=request.data["id"])
+        user = request.user
+        if Cart.objects.filter(user=user, product=product).exists():
+            cart = Cart.objects.get(user=user, product=product)
+            cart.delete()
+            return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+

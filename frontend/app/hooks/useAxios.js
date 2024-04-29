@@ -3,13 +3,15 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const useAxios = () => {
     const { authToken, setUser, setAuthToken, baseURL } = useContext(AuthContext);
 
+    let router = useRouter()
+
     if (!authToken) {
-        redirect('/auth/login');
+        router.push('/auth/login');
     }
 
     const axiosInstance = axios.create({
@@ -39,7 +41,7 @@ const useAxios = () => {
                 } catch (error) {
                     console.error("Error refreshing token:", error);
                     // Handle token refresh failure (e.g., redirect to login page)
-                    redirect('/auth/login');
+                    router.push('/auth/login');
                 }
             }
         }

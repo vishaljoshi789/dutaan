@@ -66,7 +66,10 @@ export default function products() {
           <TableRow className="border-b-2 border-black" key={item.id}>
             <TableCell>{item.image?<Image src={`${baseURL}${item.image}`} width={50} height={50} alt={item.name}/>:<>NULL</>}</TableCell>
             <TableCell className="font-medium">{item.name}</TableCell>
-            <TableCell>{item.description}</TableCell>
+            <TableCell>{item.description.length>500?
+                        <><span>{item.description.slice(0,500)}</span><span id='desc' style={{display: "none"}}>{item.description.slice(500)}</span><Button onClick={(e)=>{document.querySelector("#desc").style.display=="none"?document.querySelector("#desc").style.display="inline":document.querySelector("#desc").style.display="none"}}>...</Button></>:
+                        item.description}
+            </TableCell>
             <TableCell>{item.mrp}</TableCell>
             <TableCell>{item.sell_price}</TableCell>
             <TableCell>{item.price}</TableCell>
@@ -79,7 +82,7 @@ export default function products() {
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-300">{item.status}</span>
               </label>}
             </TableCell>
-            <TableCell className="flex flex-col gap-2">{item.status!=="Banned"?<><Button className="w-fit"><Link href={`products/editProduct?id=${item.id}`}>Edit</Link></Button><Button className="w-fit">View</Button></>:<></>}</TableCell>
+            <TableCell className="flex flex-col gap-2">{item.status!=="Banned"?<><Button className="w-fit"><Link href={`products/editProduct?id=${item.id}`}>Edit</Link></Button><Button className="w-fit"><Link href={`/product?id=${item.id}`}>View</Link></Button></>:<></>}</TableCell>
           </TableRow>
         )}
         

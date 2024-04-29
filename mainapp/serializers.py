@@ -207,6 +207,7 @@ class WishlistSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'product']
 
 class CartSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
     class Meta:
         model = Cart
-        fields = "__all__"
+        fields = ['id', 'user', 'product', 'quantity']
