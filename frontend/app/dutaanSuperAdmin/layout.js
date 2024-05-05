@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { AuthProvider } from "../context/AuthContext";
-import Navbar from "../components/Navbar";
-import { Toaster } from "@/components/ui/sonner"
+import Navbar from "../components/CustomerNavbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,13 +13,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" >
-      
+    <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <Navbar/>
+          <Navbar />
           <main className=" bg-[#F5f5dc] w-full">{children}</main>
-          <Toaster richColors/>
+          <Toaster richColors />
         </AuthProvider>
       </body>
     </html>

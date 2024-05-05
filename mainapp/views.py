@@ -2,10 +2,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart
-from .serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer
+from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent
+from .serializers import UserSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer
 from rest_framework.permissions import IsAuthenticated
 import json
+from django.db.models import Q
 
 
 @api_view(['POST'])
@@ -203,5 +204,45 @@ def remove_all_cart(request):
             cart = Cart.objects.get(user=user, product=product)
             cart.delete()
             return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_cart_count(request):
+    if request.method == "GET":
+        user = request.user
+        cart = user.cart.all().count()
+        return Response({'cartCount': cart}, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_products(request):
+    if request.method == "GET":
+        # print(Product.objects.all().filter(category=1))
+        products = ProductCategory.objects.filter(category=request.GET.get('category'))
+        products = ProductCategorySerializer(products, many=True) 
+        product_id = []
+        for i in products.data:
+            i.pop('id')
+            product_id.append(i['product'])
+            i.pop('category')
+            i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
+        data = {
+            "products": products.data
+        }
+        products = ProductEvent.objects.filter(event=request.GET.get('event'))
+        products = ProductEventSerializer(products, many=True)
+        for i in products.data:
+            i.pop('id')
+            i.pop('event')
+            if i['product'] not in product_id:
+                product_id.append(i['product'])
+                i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
+        data['products'] = data['products'] + products.data
+        products = Product.objects.filter(Q(name__contains=request.GET.get('q'))|Q(description__contains=request.GET.get('q')))
+        products = ProductSerializer(products, many=True)
+        print(len(products.data))
+        return Response(data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 

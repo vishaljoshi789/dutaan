@@ -75,6 +75,9 @@ class Product(models.Model):
     status = models.CharField(default="Active", max_length=10, null=True, blank=True, choices=status_choices)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    def __str__(self):
+        return self.name
 
 
 class ProductEvent(models.Model):
