@@ -77,7 +77,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
     
     def __str__(self):
-        return self.name
+        return str(self.id)
 
 
 class ProductEvent(models.Model):
@@ -89,8 +89,8 @@ class ProductEvent(models.Model):
 class ProductCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='category')
-    # def __str__(self):
-    #     return self.product
+    def __str__(self):
+        return self.category.category
 
 
 class ProductImage(models.Model):

@@ -220,29 +220,39 @@ def get_cart_count(request):
 def get_products(request):
     if request.method == "GET":
         # print(Product.objects.all().filter(category=1))
-        products = ProductCategory.objects.filter(category=request.GET.get('category'))
-        products = ProductCategorySerializer(products, many=True) 
         product_id = []
-        for i in products.data:
-            i.pop('id')
-            product_id.append(i['product'])
-            i.pop('category')
-            i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
-        data = {
-            "products": products.data
-        }
-        products = ProductEvent.objects.filter(event=request.GET.get('event'))
-        products = ProductEventSerializer(products, many=True)
-        for i in products.data:
-            i.pop('id')
-            i.pop('event')
-            if i['product'] not in product_id:
+        data = {'products':[]}
+        if request.GET.get('category'):
+            products = ProductCategory.objects.filter(category=request.GET.get('category'))
+            products = ProductCategorySerializer(products, many=True) 
+            print(len(products.data))
+            for i in products.data:
+                i.pop('id')
+                i.pop('category')
                 product_id.append(i['product'])
                 i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
-        data['products'] = data['products'] + products.data
-        products = Product.objects.filter(Q(name__contains=request.GET.get('q'))|Q(description__contains=request.GET.get('q')))
-        products = ProductSerializer(products, many=True)
-        print(len(products.data))
+                data['products'].append(i)
+
+        if request.GET.get('event'):
+            products = ProductEvent.objects.filter(event=request.GET.get('event'))
+            products = ProductEventSerializer(products, many=True)
+            for i in products.data:
+                i.pop('id')
+                i.pop('event')
+                if i['product'] not in product_id:
+                    product_id.append(i['product'])
+                    i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
+                    data['products'].append(i)
+        if request.GET.get('q'):
+            products = Product.objects.filter(Q(name__contains=request.GET.get('q'))|Q(description__contains=request.GET.get('q')))
+            products = ProductSerializer(products, many=True)
+            for i in products.data:
+                if i['id'] not in product_id:
+                    product_id.append(i['id'])
+                    data['products'].append({
+                        'product': i
+                    })
+                    
         return Response(data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 

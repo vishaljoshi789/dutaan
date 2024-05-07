@@ -5,6 +5,7 @@ import AuthContext from "../context/AuthContext";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   let { baseURL } = useContext(AuthContext);
@@ -31,9 +32,13 @@ export default function Home() {
         <div className="flex gap-5 w-full p-1 px-3 justify-evenly">
           {category &&
             category.map((e) => (
-              <span key={e.id} className="bg-white p-1 rounded-sm">
+              <Link
+                key={e.id}
+                className="bg-white p-1 rounded-sm"
+                href={`products?category=${e.id}`}
+              >
                 {e.category}
-              </span>
+              </Link>
             ))}
         </div>
         <ScrollBar orientation="horizontal" />
