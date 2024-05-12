@@ -57,7 +57,7 @@ export default function Home() {
       </div>
       <div className="giftfinder flex justify-center items-center py-5">
         <form
-          action=""
+          action="/products"
           method="get"
           className="flex gap-2 items-center justify-evenly flex-col md:flex-row p-8 bg-white shadow-md"
         >
@@ -88,7 +88,7 @@ export default function Home() {
             </svg>
             <input
               type="text"
-              name=""
+              name="pincode"
               id=""
               placeholder="Enter Pincode"
               className="pl-5 p-2 rounded-sm w-full lg:w-fit border-2 border-[#D0AF74]"
@@ -97,27 +97,25 @@ export default function Home() {
 
           <div className="w-full lg:w-fit">
             <select
-              name=""
+              name="event"
               id=""
               className="w-full p-2 rounded-sm border-2 border-[#D0AF74]"
             >
               <option value="">Select Events</option>
               {event &&
-                event.map((e) => <option value={e.event}>{e.event}</option>)}
+                event.map((e) => <option value={e.id}>{e.event}</option>)}
             </select>
           </div>
 
           <div className="w-full lg:w-fit">
             <select
-              name=""
+              name="category"
               id=""
               className="w-full p-2 rounded-sm border-2 border-[#D0AF74]"
             >
               <option value="">Select Gift Type</option>
               {category &&
-                category.map((e) => (
-                  <option value={e.category}>{e.category}</option>
-                ))}
+                category.map((e) => <option value={e.id}>{e.category}</option>)}
             </select>
           </div>
           <Button type="Submit" variant="default" className="">

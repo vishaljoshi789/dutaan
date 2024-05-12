@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { AuthProvider } from "../context/AuthContext";
-import Navbar from "../components/CustomerNavbar";
+import Navbar from "../dutaanSuperAdmin/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <AuthProvider>
           <Navbar />
-          <main className=" bg-[#F5f5dc] w-full">{children}</main>
+          <main>{children}</main>
           <Toaster richColors />
         </AuthProvider>
       </body>

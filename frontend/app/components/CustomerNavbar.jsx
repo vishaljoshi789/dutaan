@@ -22,7 +22,7 @@ import Image from "next/image";
 import axiosInstance from "../utils/axiosInstance";
 
 const Navbar = () => {
-  let { user, userLogout, baseURL, authToken } = useContext(AuthContext);
+  let { user, userLogout, authToken } = useContext(AuthContext);
   let [cartCount, setCartCount] = useState();
 
   let cartc = async () => {
@@ -124,8 +124,8 @@ const Navbar = () => {
                   <DialogHeader>
                     <DialogTitle>Search Dutaan</DialogTitle>
                     <DialogDescription>
-                      <form action="" method="get">
-                        <input type="text" className="text-xl p-2" />
+                      <form action="/products" method="get">
+                        <input type="text" className="text-xl p-2" name="q" />
                       </form>
                     </DialogDescription>
                   </DialogHeader>

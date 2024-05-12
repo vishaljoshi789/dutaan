@@ -69,6 +69,29 @@ export const AuthProvider = ({ children }) => {
     loginTokenFetch(e.target.username.value, e.target.password.value);
   };
 
+  let loginAdminUser = async (e) => {
+    e.preventDefault();
+    let username = e.target.username.value;
+    let password = e.target.password.value;
+    let response = await fetch(`${baseURL}/api/token/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username: username, password: password }),
+    });
+    let data = await response.json();
+    if (response.status === 200) {
+      setAuthToken(data);
+      setUser(jwtDecode(data.access));
+      localStorage.setItem("accessToken", JSON.stringify(data));
+      toast.success("Login Success!");
+      router.push("/dutaanSuperAdmin");
+    } else {
+      userLogout();
+    }
+  };
+
   let registerUser = async (e) => {
     e.preventDefault();
     if (e.target.password1.value !== e.target.password2.value) {
@@ -83,6 +106,7 @@ export const AuthProvider = ({ children }) => {
       email: e.target.email.value,
       username: e.target.email.value,
       password: e.target.password1.value,
+      status: "Active",
       phone: e.target.phone.value,
       gender: e.target.gender.value,
       role: e.target.role.value === "Vendor" ? "Vendor" : "Customer",
@@ -154,6 +178,7 @@ export const AuthProvider = ({ children }) => {
     setAuthToken,
     setAuthToken,
     baseURL: baseURL,
+    loginAdminUser: loginAdminUser,
   };
 
   return (

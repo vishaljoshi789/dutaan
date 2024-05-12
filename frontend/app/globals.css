@@ -2,14 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-.cus-animate{
+.cus-animate {
   transition: all ease-in 0.2s;
 }
 
+.Stars {
+  --percent: calc(var(--rating) / 5 * 100%);
 
+  display: inline-block;
+  font-family: Times;
+  line-height: 1;
+
+  &::before {
+    content: "★★★★★";
+    letter-spacing: 3px;
+    background: linear-gradient(
+      90deg,
+      gold var(--percent),
+      gray var(--percent)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
 
 @layer base {
   :root {
+    --star-color: #fff;
+    --star-background: #fc0;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
