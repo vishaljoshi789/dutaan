@@ -10,7 +10,7 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  const baseURL = "http://192.168.1.4:8000";
+  const baseURL = "http://127.0.0.1:8000";
 
   const router = useRouter();
 
@@ -18,8 +18,10 @@ export const AuthProvider = ({ children }) => {
   let [authToken, setAuthToken] = useState(null);
   let [loading, setLoading] = useState(true);
   let [userInfo, setUserInfo] = useState(null);
+  let [cartCount, setCartCount] = useState();
 
   useEffect(() => {
+    
     setUserInfo(
       localStorage.getItem("userInfo")
         ? JSON.parse(localStorage.getItem("userInfo"))
@@ -35,14 +37,25 @@ export const AuthProvider = ({ children }) => {
         ? jwtDecode(localStorage.getItem("accessToken"))
         : null
     );
+    
     setLoading(false);
   }, []);
   useEffect(() => {
     if (authToken) {
       setUser(jwtDecode(authToken.access));
       getUserDetails();
+      cartc();
     }
   }, [authToken, loading]);
+
+  let cartc = async () => {
+    if (user && authToken) {
+      let response = await axiosInstance.get(`/getCartCount/`);
+      if (response.status == 200) {
+        setCartCount(response.data.cartCount);
+      }
+    }
+  };
 
   let loginTokenFetch = async (username, password) => {
     let response = await fetch(`${baseURL}/api/token/`, {
@@ -179,6 +192,8 @@ export const AuthProvider = ({ children }) => {
     setAuthToken,
     baseURL: baseURL,
     loginAdminUser: loginAdminUser,
+    cartc: cartc,
+    cartCount: cartCount
   };
 
   return (

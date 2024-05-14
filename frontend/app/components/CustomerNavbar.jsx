@@ -19,23 +19,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import axiosInstance from "../utils/axiosInstance";
 
 const Navbar = () => {
-  let { user, userLogout, authToken } = useContext(AuthContext);
-  let [cartCount, setCartCount] = useState();
-
-  let cartc = async () => {
-    if (user && authToken) {
-      let response = await axiosInstance.get(`/getCartCount/`);
-      if (response.status == 200) {
-        setCartCount(response.data.cartCount);
-      }
-    }
-  };
-  useEffect(() => {
-    cartc();
-  }, []);
+  let { user, userLogout, cartCount } = useContext(AuthContext);
   return (
     <nav className="shadow-lg relative z-10">
       <div className="flex justify-between py-3 px-5 lg:px-10 items-center w-full shadow-lg bg-[#D0AF74]">
@@ -175,7 +161,7 @@ const Navbar = () => {
                 />
                 {user && (
                   <span className="absolute translate-x-4 -translate-y-4 bg-[#ffdc69] text-[10px] rounded-full w-3 h-3 text-center text-yellow-950">
-                    {cartCount}
+                    {cartCount?cartCount:0}
                   </span>
                 )}
               </Link>

@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button'
 
 export default function Product() {
     let router = useRouter()
-    let { baseURL } = useContext(AuthContext)
+    let { baseURL, cartc } = useContext(AuthContext)
     let API = useAxios()
     const [api, setApi] = useState()
     let param = useSearchParams()
@@ -88,6 +88,7 @@ export default function Product() {
         if (response.status === 200) {
             console.log(response.data)
             e.target.srcset = "/images/cart_added.png"
+            cartc()
         }
     }
 
