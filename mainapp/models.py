@@ -117,6 +117,7 @@ class Wishlist(models.Model):
     user = models.ForeignKey(CustomUser, related_name='wishlist', on_delete=models.CASCADE)
 
 
+
 # class Order(models.Model):
 #     status_choices = {"Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered"}
 #     user = models.ForeignKey(Customer, on_delete=models.CASCADE)

@@ -79,11 +79,13 @@ def get_user_info(request):
             serializer = VendorSerializer(user)
             serializer.data.pop("aadhar")
             serializer.data.pop("gst")
-        else:
+        elif user.role == "Customer":
             user = Customer.objects.get(user=user)
             serializer = CustomerSerializer(user)
+        else:
+            return Response({'user_type': 'admin'})
         
-        serializer.data["user"].pop("password")
+        serializer.data["user"].pop("password", None)
         return Response(serializer.data)
     
 
@@ -225,33 +227,38 @@ def get_products(request):
         if request.GET.get('category'):
             products = ProductCategory.objects.filter(category=request.GET.get('category'))
             products = ProductCategorySerializer(products, many=True) 
-            print(len(products.data))
+            # print(len(products.data))
             for i in products.data:
-                i.pop('id')
-                i.pop('category')
-                product_id.append(i['product'])
-                i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
-                data['products'].append(i)
+                product = Product.objects.get(id = i['product'])
+                if product.status == 'Active':
+                    i.pop('id')
+                    i.pop('category')
+                    product_id.append(i['product'])
+                    i['product'] = ProductSerializer(product).data
+                    data['products'].append(i)
 
         if request.GET.get('event'):
             products = ProductEvent.objects.filter(event=request.GET.get('event'))
             products = ProductEventSerializer(products, many=True)
             for i in products.data:
-                i.pop('id')
-                i.pop('event')
-                if i['product'] not in product_id:
-                    product_id.append(i['product'])
-                    i['product'] = ProductSerializer(Product.objects.get(id = i['product'])).data
-                    data['products'].append(i)
+                product = Product.objects.get(id = i['product'])
+                if product.status == 'Active':
+                    i.pop('id')
+                    i.pop('event')
+                    if i['product'] not in product_id:
+                        product_id.append(i['product'])
+                        i['product'] = ProductSerializer(product).data
+                        data['products'].append(i)
         if request.GET.get('q'):
             products = Product.objects.filter(Q(name__contains=request.GET.get('q'))|Q(description__contains=request.GET.get('q')))
             products = ProductSerializer(products, many=True)
             for i in products.data:
-                if i['id'] not in product_id:
-                    product_id.append(i['id'])
-                    data['products'].append({
-                        'product': i
-                    })
+                if i['status'] == 'Active':
+                    if i['id'] not in product_id:
+                        product_id.append(i['id'])
+                        data['products'].append({
+                            'product': i
+                        })
                     
         return Response(data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
