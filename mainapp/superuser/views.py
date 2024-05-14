@@ -42,3 +42,26 @@ def update_user_data(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def toggle_user_status(request):
+    if request.method == "GET":
+        user = CustomUser.objects.get(id=request.GET.get('id'))
+        if user.status=="Active":
+            user.status = "Inactive"
+        else:
+            user.status = "Active"
+        user.save()
+
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def get_all_products(request):
+    if request.method == "GET":
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
