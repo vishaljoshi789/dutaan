@@ -72,6 +72,7 @@ def add_product(request):
         data['image'] = image[0]
         # data['status'] = "Active"
         # print(data)
+        data['price'] = float(data['sell_price']) + (float(data['sell_price']) * 0.1)
         data['vendor'] = Vendor.objects.get(user = request.user).id
         serializer = ProductSerializer(data=data, partial=True)
         if serializer.is_valid():
