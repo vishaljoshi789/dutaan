@@ -263,3 +263,19 @@ def get_products(request):
         return Response(data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['GET'])
+def get_products_by_category(request):
+    if request.method == "GET":
+        products = ProductCategory.objects.filter(category=request.GET.get('category'))[:10]
+        products = ProductCategorySerializer(products, many=True) 
+        data = {'products':[]}
+        for i in products.data:
+                product = Product.objects.get(id = i['product'])
+                if product.status == 'Active':
+                    i.pop('id')
+                    i.pop('category')
+                    i['product'] = ProductSerializer(product).data
+                    data['products'].append(i)
+        return Response(data, status=status.HTTP_200_OK)
+
