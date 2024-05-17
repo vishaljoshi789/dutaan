@@ -6,11 +6,13 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ProductCard from "../components/ProductCard";
 
 export default function Home() {
   let { baseURL } = useContext(AuthContext);
   let [category, setCategory] = useState(null);
   let [event, setEvent] = useState(null);
+  let [section1Products, setSection1Products] = useState([]);
   let getCategory = async () => {
     let response = await fetch(`${baseURL}/getCategory`);
     let data = await response.json();
@@ -22,9 +24,15 @@ export default function Home() {
     let data = await response.json();
     setEvent(data);
   };
+  let getSection1Products = async () => {
+    let response = await fetch(`${baseURL}/getProductsByCategory?category=1`);
+    let data = await response.json();
+    setSection1Products(data.products);
+  };
   useEffect(() => {
     getCategory();
     getEvent();
+    getSection1Products();
   }, []);
   return (
     <div className="flex flex-col">
@@ -123,7 +131,23 @@ export default function Home() {
           </Button>
         </form>
       </div>
-      <ul></ul>
+
+      <div className="birthday_gift">
+        <h2 className="text-red-500 font-bold">Birthday Gifts</h2>
+        <div className="flex">
+          {section1Products.map((e) => (
+            <ProductCard
+              key={e.product.id}
+              id={e.product.id}
+              img={`${baseURL}${e.product.image}`}
+              name={e.product.name}
+              mrp={e.product.mrp}
+              price={e.product.price}
+              sell_price={e.product.sell_price}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
