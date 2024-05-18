@@ -65,3 +65,42 @@ def get_all_products(request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def add_category(request):
+    if request.method == "POST":
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def delete_category(request):
+    if request.method == "GET":
+        category = Category.objects.get(id=request.GET.get('id'))
+        category.delete()
+        return Response(status=status.HTTP_200_OK)
+    
+    
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def add_event(request):
+    if request.method == "POST":
+        serializer = EventSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def delete_event(request):
+    if request.method == "GET":
+        event = Event.objects.get(id=request.GET.get('id'))
+        event.delete()
+        return Response(status=status.HTTP_200_OK)
+    
+
