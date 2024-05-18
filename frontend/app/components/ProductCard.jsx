@@ -9,15 +9,21 @@ export default function ProductCard({
   mrp,
   price,
   sell_price,
+  highlight = false,
 }) {
   return (
     <div className="xl:w-1/4 md:w-1/2 md:p-4">
       <a
-        className="bg-gray-100 md:p-6 rounded-lg flex-row flex md:flex-col p-2 gap-2 my-1 shadow-lg hover:shadow-sm"
+        className={`bg-gray-100 md:p-6 rounded-lg ${
+          highlight ? "flex-col" : "flex-row md:flex-col "
+        } flex p-2 gap-2 my-1 shadow-lg hover:shadow-sm`}
         href={`/product?id=${id}`}
       >
         <img
-          className="rounded w-1/3 md:w-full object-contain object-center md:h-40 my-auto"
+          className={`rounded {
+            ${
+              highlight ? "w-full h-40" : "w-1/3 md:w-full md:h-40"
+            } object-contain object-center my-auto`}
           src={img}
           alt="content"
         />

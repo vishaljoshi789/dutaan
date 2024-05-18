@@ -124,12 +124,12 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'category']
+        fields = ['id', 'category', 'image']
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'event']
+        fields = ['id', 'event', 'image']
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:

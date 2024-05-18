@@ -36,6 +36,7 @@ class CustomUser(AbstractUser):
     status = models.CharField(default="Active", max_length=10, null=True, blank=True, choices=status_choices)
 
 class Address(models.Model):
+    user = models.ForeignKey(CustomUser, related_name='addresses', on_delete=models.CASCADE, null=True, blank=True)
     street_address = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
@@ -56,6 +57,7 @@ class Vendor(models.Model):
 
 class Category(models.Model):
     category = models.CharField(max_length = 100, null=True, blank=True)
+    image = models.ImageField(upload_to=website_images_path, null=True, blank=True)
 
     def __str__(self):
         return self.category
@@ -123,10 +125,29 @@ class Wishlist(models.Model):
     user = models.ForeignKey(CustomUser, related_name='wishlist', on_delete=models.CASCADE)
 
 
+class Order(models.Model):
+    status_choices = {"Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered", "Cancelled": "Cancelled"}
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
+    date = models.DateTimeField(auto_now_add = True)
+    status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices)
 
-# class Order(models.Model):
-#     status_choices = {"Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered"}
-#     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
-#     amount = models.IntegerField(null=True, blank=True)
-#     date = models.DateTimeField(auto_now_add = True)
-#     status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+
+class Payment(models.Model):
+    PAYMENT_METHODS = (
+        ('Online', 'Online'),
+        ('Cash On Delivery', 'Cash On Delivery'),
+    )
+
+    order = models.OneToOneField(Order, related_name='payment', on_delete=models.CASCADE)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
+    transaction_id = models.CharField(max_length=100, null=True, blank=True)  # for online payments
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)
