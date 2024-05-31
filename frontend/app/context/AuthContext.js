@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
   let [cartCount, setCartCount] = useState();
 
   useEffect(() => {
-    
     setUserInfo(
       localStorage.getItem("userInfo")
         ? JSON.parse(localStorage.getItem("userInfo"))
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }) => {
         ? jwtDecode(localStorage.getItem("accessToken"))
         : null
     );
-    
+
     setLoading(false);
   }, []);
   useEffect(() => {
@@ -49,12 +48,14 @@ export const AuthProvider = ({ children }) => {
   }, [authToken, loading]);
 
   let cartc = async () => {
-    if (user && authToken) {
-      let response = await axiosInstance.get(`/getCartCount/`);
-      if (response.status == 200) {
-        setCartCount(response.data.cartCount);
+    try {
+      if (user && authToken) {
+        let response = await axiosInstance.get(`/getCartCount/`);
+        if (response.status == 200) {
+          setCartCount(response.data.cartCount);
+        }
       }
-    }
+    } catch (error) {}
   };
 
   let loginTokenFetch = async (username, password) => {
@@ -73,6 +74,7 @@ export const AuthProvider = ({ children }) => {
       toast.success("Login Success!");
       router.push("/account");
     } else {
+      toast.error("Authentication Failed");
       userLogout();
     }
   };
@@ -127,6 +129,8 @@ export const AuthProvider = ({ children }) => {
     formData.append("user", userformdata);
 
     let addressformdata = JSON.stringify({
+      name: e.target.name.value,
+      contact: e.target.phone.value,
       street_address: e.target.address.value,
       city: e.target.city.value,
       state: e.target.state.value,
@@ -193,7 +197,7 @@ export const AuthProvider = ({ children }) => {
     baseURL: baseURL,
     loginAdminUser: loginAdminUser,
     cartc: cartc,
-    cartCount: cartCount
+    cartCount: cartCount,
   };
 
   return (

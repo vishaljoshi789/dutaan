@@ -20,5 +20,8 @@ urlpatterns = [
     path('getCartCount/', views.get_cart_count),
     path('products/', views.get_products),
     path('getProductsByCategory/', views.get_products_by_category),
+    path('getUserAddress/', views.get_user_address),
+    path('addUserAddress/', views.user_add_address),
+    path('getAddress/', views.get_address),
 
 ]

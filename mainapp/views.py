@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent
+from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent, Address
 from .serializers import UserSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer
 from rest_framework.permissions import IsAuthenticated
 import json
@@ -31,7 +31,9 @@ def user_registration(request):
 @api_view(['POST'])
 def user_add_address(request):
     if request.method == 'POST':
-        serializer = AddressSerializer(data=request.data)
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = AddressSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -278,4 +280,21 @@ def get_products_by_category(request):
                     i['product'] = ProductSerializer(product).data
                     data['products'].append(i)
         return Response(data, status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_address(request):
+    if request.method == "GET":
+        user = request.user
+        address = user.addresses.all()
+        customer_address = Address.objects.filter(id=user.user.all()[0].address.id)
+        address = address | customer_address
+        serializer = AddressSerializer(address, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])  
+def get_address(request):
+    if request.method == "GET":
+        address = Address.objects.get(id=request.GET.get('address'))
+        serializer = AddressSerializer(address)
+        return Response(serializer.data, status=status.HTTP_200_OK)
