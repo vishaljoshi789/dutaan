@@ -131,6 +131,7 @@ class Order(models.Model):
     status_choices = {"Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered", "Cancelled": "Cancelled"}
     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
+    shipping = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
     date = models.DateTimeField(auto_now_add = True)
     status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices)
 
