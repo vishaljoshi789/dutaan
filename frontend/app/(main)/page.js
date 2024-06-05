@@ -139,6 +139,41 @@ export default function Home() {
         </form>
       </div>
 
+      <div className="flex gap-5 justify-evenly">
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">Mother's Day</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">Birthday</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">Best of Personalised</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">Best of Flowers</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">Eggless Cakes</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">For Kids</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">For Him</span>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+          <span className="text-sm">For Her</span>
+        </div>
+      </div>
+
       <div className="birthday_gift p-3">
         <h2 className="text-red-500 font-bold">Birthday Gifts</h2>
         <ScrollArea className="w-full whitespace-nowrap rounded-md border">
@@ -154,6 +189,7 @@ export default function Home() {
                   price={e.product.price}
                   sell_price={e.product.sell_price}
                   highlight={true}
+                  description={e.product.description}
                 />
               </>
             ))}
@@ -176,11 +212,67 @@ export default function Home() {
                   price={e.product.price}
                   sell_price={e.product.sell_price}
                   highlight={true}
+                  description={e.product.description}
                 />
               </>
             ))}
           </div>
           <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+      <div className="trending p-3">
+        <h2 className="text-red-500 font-bold">Trending Gifts</h2>
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+          <div className="p-5 flex gap-5 justify-evenly">
+            <div className="w-48 h-48 bg-white flex items-end text-center rounded-lg">
+              <span className="bg-gradient-to-b from-white to-gray-500 text-white w-full pt-7 pb-2 rounded-lg">
+                FLOWERS
+              </span>
+            </div>
+            <div className="w-48 h-48 bg-white flex items-end text-center rounded-lg">
+              <span className="bg-gradient-to-b from-white to-gray-500 text-white w-full pt-7 pb-2 rounded-lg">
+                CAKES
+              </span>
+            </div>
+            <div className="w-48 h-48 bg-white flex items-end text-center rounded-lg">
+              <span className="bg-gradient-to-b from-white to-gray-500 text-white w-full pt-7 pb-2 rounded-lg">
+                PERSONALIZED
+              </span>
+            </div>
+            <div className="w-48 h-48 bg-white flex items-end text-center rounded-lg">
+              <span className="bg-gradient-to-b from-white to-gray-500 text-white w-full pt-7 pb-2 rounded-lg">
+                HAMPERS
+              </span>
+            </div>
+            <div className="w-48 h-48 bg-white flex items-end text-center rounded-lg">
+              <span className="bg-gradient-to-b from-white to-gray-500 text-white w-full pt-7 pb-2 rounded-lg">
+                PLANTS
+              </span>
+            </div>
+          </div>
+        </ScrollArea>
+      </div>
+      <div className="stories p-3">
+        <h2 className="text-red-500 font-bold">Gifts That tell Stories</h2>
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+          <div className=" flex justify-evenly gap-2 p-2">
+            <div className="flex flex-col items-center gap-2">
+              <div className="rounded-full w-56 h-56 bg-gray-500 border-white border-4 shadow-lg"></div>
+              <span>Stationery Gift</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="rounded-full w-56 h-56 bg-gray-500 border-white border-4 shadow-lg"></div>
+              <span>Cushions</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="rounded-full w-56 h-56 bg-gray-500 border-white border-4 shadow-lg"></div>
+              <span>Photo Frames</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="rounded-full w-56 h-56 bg-gray-500 border-white border-4 shadow-lg"></div>
+              <span>Mugs</span>
+            </div>
+          </div>
         </ScrollArea>
       </div>
     </div>

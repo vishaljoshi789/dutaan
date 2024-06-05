@@ -38,11 +38,12 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="hidden lg:block">
-          <form action="" method="get" className="flex items-center">
+          <form action="/products" method="get" className="flex items-center">
             <input
               type="text"
               className="text-xl p-2 rounded-full pr-12 border-2 border-[#E7BB49]"
               placeholder="Search your products"
+              name="q"
             />
             <button
               type="submit"
@@ -161,7 +162,7 @@ const Navbar = () => {
                 />
                 {user && (
                   <span className="absolute translate-x-4 -translate-y-4 bg-[#ffdc69] text-[10px] rounded-full w-3 h-3 text-center text-yellow-950">
-                    {cartCount?cartCount:0}
+                    {cartCount ? cartCount : 0}
                   </span>
                 )}
               </Link>

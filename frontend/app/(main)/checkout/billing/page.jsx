@@ -1,7 +1,7 @@
 "use client";
 import AuthContext from "@/app/context/AuthContext";
 import useAxios from "@/app/hooks/useAxios";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import {
   Table,
@@ -13,9 +13,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function page() {
+  let router = useRouter();
   const searchParams = useSearchParams();
   let [cart, setCart] = useState([]);
   let { baseURL } = useContext(AuthContext);
@@ -25,7 +26,7 @@ export default function page() {
   let getCart = async () => {
     let response = await api.get("/getCart/");
     if (response.status == 200) {
-      console.log(response.data);
+      // console.log(response.data);
       setTotalAmt(0);
       response.data.forEach((e) => {
         setTotalAmt(
@@ -37,6 +38,21 @@ export default function page() {
         );
       });
       setCart(response.data);
+    }
+  };
+  let placeOrder = async () => {
+    let response = await api.post("/placeOrder/", {
+      order: {
+        amount: totalAmt + totalAmt * 0.18,
+        shipping: 50,
+        address: searchParams.get("address"),
+      },
+      items: cart,
+    });
+    if (response.status == 200) {
+      router.push("/checkout/success");
+    } else {
+      router.push("/checkout/failed");
     }
   };
   let getAddress = async () => {
@@ -147,21 +163,25 @@ export default function page() {
               Subtotal <span className="ml-auto font-bold">₹{totalAmt}</span>
             </li>
             <li className="flex flex-wrap gap-4 text-md py-4">
-              Shipping <span className="ml-auto font-bold">$4.00</span>
+              Shipping <span className="ml-auto font-bold">+₹50</span>
             </li>
             <li className="flex flex-wrap gap-4 text-md py-4">
-              Tax <span className="ml-auto font-bold">$4.00</span>
+              Tax {`(18%)`}
+              <span className="ml-auto font-bold">+₹{0.18 * totalAmt}</span>
             </li>
             <li className="flex flex-wrap gap-4 text-md py-4 font-bold">
-              Total <span className="ml-auto">$45.00</span>
+              Total{" "}
+              <span className="ml-auto">
+                ₹{totalAmt + totalAmt * 0.18 + 50}
+              </span>
             </li>
           </ul>
-          <Link
-            href=""
+          <Button
             className="mt-6 text-md px-6 py-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white rounded"
+            onClick={placeOrder}
           >
             Confirm Order
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

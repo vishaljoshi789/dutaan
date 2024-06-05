@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent, Address
-from .serializers import UserSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer
+from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent, Address, Order, OrderItem
+from .serializers import UserSerializer, OrderItemProductSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework.permissions import IsAuthenticated
 import json
 from django.db.models import Q
@@ -210,6 +210,14 @@ def remove_all_cart(request):
             return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def clear_cart(request):
+    if request.method == "POST":
+        Cart.objects.filter(user=request.user).delete()
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_cart_count(request):
@@ -298,3 +306,43 @@ def get_address(request):
         address = Address.objects.get(id=request.GET.get('address'))
         serializer = AddressSerializer(address)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(['POST'])
+def place_order(request):
+    if request.method == "POST":
+        order = request.data['order']
+        order['user'] = request.user.id
+        serializer = OrderSerializer(data=order, partial=True)
+        if serializer.is_valid():
+            order = serializer.save()
+            items = request.data['items']
+            for item in items:
+                item['product'] = item['product']['id']
+                item['order'] = order.id
+                itemserializer = OrderItemSerializer(data=item, partial=True)
+                if itemserializer.is_valid():
+                    itemserializer.save()
+                else:
+                    return Response(itemserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_orders(request):
+    if request.method == "GET":
+        orders = Order.objects.filter(user=request.user).order_by('-date')
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_order_items(request):
+    if request.method == "GET":
+        order = Order.objects.get(id=request.GET.get('id'))
+        items = order.items.all()
+        serializer = OrderItemProductSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

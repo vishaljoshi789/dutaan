@@ -10,6 +10,7 @@ export default function ProductCard({
   price,
   sell_price,
   highlight = false,
+  description,
 }) {
   return (
     <div className="xl:w-1/4 md:w-1/2 md:p-4">
@@ -32,6 +33,9 @@ export default function ProductCard({
             {/* SUBTITLE */}
           </span>
           <span className="text-gray-900 font-medium">{name}</span>
+          {highlight && (
+            <span className="text-gray-500 text-xs">{description}</span>
+          )}
           <div>
             <div
               className="Stars text-xl"

@@ -128,12 +128,13 @@ class Wishlist(models.Model):
 
 
 class Order(models.Model):
-    status_choices = {"Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered", "Cancelled": "Cancelled"}
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    status_choices = {"Pending": "Pending", "Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered", "Cancelled": "Cancelled"}
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
     shipping = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
     date = models.DateTimeField(auto_now_add = True)
-    status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices)
+    status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices, default="Pending")
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class OrderItem(models.Model):
