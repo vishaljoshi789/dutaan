@@ -128,25 +128,28 @@ class Wishlist(models.Model):
 
 
 class Order(models.Model):
-    status_choices = {"Pending": "Pending", "Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered", "Cancelled": "Cancelled"}
+    
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    
     amount = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
     shipping = models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2)
     date = models.DateTimeField(auto_now_add = True)
-    status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices, default="Pending")
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class OrderItem(models.Model):
+    status_choices = {"Pending": "Pending", "Processing": "Processing", "Dispatched":"Dispatched", "Delivered": "Delivered", "Cancelled": "Cancelled"}
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    status = models.CharField(max_length=20, null=True, blank=True, choices=status_choices, default="Pending")
+
 
 
 class Payment(models.Model):
     PAYMENT_METHODS = (
         ('Online', 'Online'),
-        ('Cash On Delivery', 'Cash On Delivery'),
+        ('QR', 'QR'),
     )
 
     order = models.OneToOneField(Order, related_name='payment', on_delete=models.CASCADE)

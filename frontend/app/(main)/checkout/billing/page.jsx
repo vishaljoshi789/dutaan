@@ -50,7 +50,7 @@ export default function page() {
       items: cart,
     });
     if (response.status == 200) {
-      router.push("/checkout/success");
+      router.push(`/checkout/payment?id=${response.data.id}`);
     } else {
       router.push("/checkout/failed");
     }

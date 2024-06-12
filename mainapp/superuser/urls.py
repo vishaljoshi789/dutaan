@@ -11,4 +11,6 @@ urlpatterns = [
     path('delete-category/', views.delete_category),
     path('add-event/', views.add_event),
     path('delete-event/', views.delete_event),
+    path('get-payments/', views.get_payments),
+    path('toggle-payment-status/', views.toggle_payment_status),
 ]

@@ -215,7 +215,7 @@ class CartSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'user', 'status', 'amount', 'shipping', 'date', 'address']
+        fields = ['id', 'user', 'amount', 'shipping', 'date', 'address']
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -226,4 +226,9 @@ class OrderItemProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
     class Meta:
         model = OrderItem
-        fields = ['id', 'product', 'quantity']
+        fields = ['id', 'product', 'quantity', 'status']
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'

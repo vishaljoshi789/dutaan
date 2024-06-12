@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export default function admin() {
-  let { userInfo } = useContext(AuthContext);
   let [users, setUsers] = useState([]);
   let [loading, setLoading] = useState(true);
   let api = useAxios();

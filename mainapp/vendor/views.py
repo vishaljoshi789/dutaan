@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from ..models import CustomUser, Product, Customer, Vendor, Category, Event
-from ..serializers import UserSerializer, ProductSerializer, EventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer 
+from ..models import CustomUser, Product, Customer, Vendor, Category, Event, Order, OrderItem
+from ..serializers import  ProductSerializer, OrderItemProductSerializer, OrderSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import IsAuthenticated
 from ..permissions import isVendor
@@ -155,4 +155,15 @@ def toggleProductStatus(request):
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
-
+@permission_classes([IsAuthenticated, isVendor])
+@api_view(['GET'])
+def orders(request):
+    if request.method == "GET":
+        vendor = Vendor.objects.get(user=request.user)
+        vendor_products = vendor.product_set.all()
+        order_items = OrderItem.objects.filter(product__in=vendor_products)
+        orders = Order.objects.filter(items__in=order_items).distinct()
+        paid_orders = orders.filter(payment__is_paid=True)
+        serializer = OrderSerializer(paid_orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)

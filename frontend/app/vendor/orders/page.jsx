@@ -19,8 +19,9 @@ export default function page() {
   let [orders, setOrders] = useState([]);
   let [loading, setLoading] = useState(true);
   let getOrders = async () => {
-    let response = await api.get("/getOrders/");
+    let response = await api.get("/vendor/getOrders/");
     if (response.status == 200) {
+      console.log(response.data);
       setOrders(response.data);
       toast.success("Order Fetched.");
       setLoading(false);
@@ -54,7 +55,6 @@ export default function page() {
       const readableDate = date.toLocaleDateString("en-US", options);
 
       e.innerText = readableDate;
-      console.log(readableDate);
     });
   };
 
@@ -69,7 +69,7 @@ export default function page() {
             <TableHead>Date</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>Shipping</TableHead>
-            <TableHead>Total</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>View</TableHead>
           </TableRow>
         </TableHeader>
@@ -80,9 +80,7 @@ export default function page() {
               <TableCell className="date">{item.date}</TableCell>
               <TableCell>{item.amount}</TableCell>
               <TableCell>{item.shipping}</TableCell>
-              <TableCell>
-                {parseFloat(item.amount) + parseFloat(item.shipping)}
-              </TableCell>
+              <TableCell>{item.status}</TableCell>
               <TableCell>
                 <Link href={`/order?id=${item.id}`}>
                   <Button>View Order</Button>

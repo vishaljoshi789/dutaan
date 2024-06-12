@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
 from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent, Address, Order, OrderItem
-from .serializers import UserSerializer, OrderItemProductSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer, OrderSerializer, OrderItemSerializer
+from .serializers import UserSerializer, OrderItemProductSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer, OrderSerializer, OrderItemSerializer, PaymentSerializer
 from rest_framework.permissions import IsAuthenticated
 import json
 from django.db.models import Q
@@ -346,3 +346,26 @@ def get_order_items(request):
         serializer = OrderItemProductSerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_order_details(request):
+    if request.method == "GET":
+        order = Order.objects.get(id=request.GET.get('id'))
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def add_payment(request):
+    if request.method == "POST":
+        serializer = PaymentSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+

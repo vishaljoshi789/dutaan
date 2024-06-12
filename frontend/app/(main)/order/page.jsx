@@ -50,6 +50,7 @@ export default function cart() {
                   <TableHead>Name</TableHead>
                   <TableHead>Quantity</TableHead>
                   <TableHead>Price</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -72,6 +73,7 @@ export default function cart() {
                         ? item.product.price * item.quantity
                         : item.product.sell_price * item.quantity}
                     </TableCell>
+                    <TableCell>{item.status}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
