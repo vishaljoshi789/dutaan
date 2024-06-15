@@ -162,9 +162,24 @@ def orders(request):
     if request.method == "GET":
         vendor = Vendor.objects.get(user=request.user)
         vendor_products = vendor.product_set.all()
-        order_items = OrderItem.objects.filter(product__in=vendor_products)
+        order_items = OrderItem.objects.filter(product__in=vendor_products).filter(status="Pending")
+
         orders = Order.objects.filter(items__in=order_items).distinct()
         paid_orders = orders.filter(payment__is_paid=True)
         serializer = OrderSerializer(paid_orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([isVendor])
+def order_content(request):
+    if request.method == "GET":
+        vendor = Vendor.objects.get(user=request.user)
+        items = OrderItem.objects.filter(order=request.GET.get('id')).filter(product__vendor_id = vendor.id)
+        serializer = OrderItemProductSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+
+        
+        
+

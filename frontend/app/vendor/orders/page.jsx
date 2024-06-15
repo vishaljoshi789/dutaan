@@ -67,8 +67,6 @@ export default function page() {
           <TableRow>
             <TableHead>ID</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Shipping</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>View</TableHead>
           </TableRow>
@@ -78,11 +76,9 @@ export default function page() {
             <TableRow className="border-b-2 border-black" key={item.id}>
               <TableCell className="font-medium">{item.id}</TableCell>
               <TableCell className="date">{item.date}</TableCell>
-              <TableCell>{item.amount}</TableCell>
-              <TableCell>{item.shipping}</TableCell>
-              <TableCell>{item.status}</TableCell>
+              <TableCell>Paid</TableCell>
               <TableCell>
-                <Link href={`/order?id=${item.id}`}>
+                <Link href={`/vendor/orderItems?id=${item.id}`}>
                   <Button>View Order</Button>
                 </Link>
               </TableCell>
