@@ -117,7 +117,9 @@ def get_payments(request):
 def toggle_payment_status(request):
     if request.method == "POST":
         payment = Payment.objects.get(id=request.data['id'])
-        payment.is_paid = not (payment.is_paid)
+        print(payment.is_paid)
+        payment.is_paid = False if (payment.is_paid) else True
+        print(payment.is_paid)
         payment.save()
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)

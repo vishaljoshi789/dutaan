@@ -155,8 +155,9 @@ def toggleProductStatus(request):
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
-@permission_classes([IsAuthenticated, isVendor])
+
 @api_view(['GET'])
+@permission_classes([isVendor])
 def orders(request):
     if request.method == "GET":
         vendor = Vendor.objects.get(user=request.user)
