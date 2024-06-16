@@ -180,6 +180,18 @@ def order_content(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
 
-        
-        
+@api_view(['GET'])
+@permission_classes([isVendor])
+def order_item_status_change(request):
+    if request.method == "GET":
+        vendor = Vendor.objects.get(user=request.user)
+        item = OrderItem.objects.get(id=request.GET.get('id'))
+        if item.product.vendor == vendor:
+            item.status = request.GET.get('status')
+            item.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+    
 

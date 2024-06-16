@@ -9,4 +9,5 @@ urlpatterns = [
     path('toggleProductStatus/', views.toggleProductStatus),
     path('getOrders/', views.orders),
     path('getOrderItems/', views.order_content),
+    path('changeOrderStatus/', views.order_item_status_change),
 ]
