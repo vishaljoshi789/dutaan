@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }) => {
     });
     let data = await response.json();
     if (response.status === 200) {
+      setUserInfo(null);
       setAuthToken(data);
       setUser(jwtDecode(data.access));
       localStorage.setItem("accessToken", JSON.stringify(data));
@@ -142,7 +143,7 @@ export const AuthProvider = ({ children }) => {
     if (e.target.role.value === "Vendor") {
       formData.append("store_name", e.target.store_name.value);
       formData.append("store_description", e.target.store_description.value);
-      formData.append("aadhar", e.target.aadhar.value);
+      formData.append("aadhar", e.target.aadhar.files[0]);
       formData.append("gst", e.target.gst.value);
       formData.append("user_image", e.target.image.files[0]);
     }
@@ -169,6 +170,7 @@ export const AuthProvider = ({ children }) => {
     setUserInfo(null);
     typeof window !== "undefined" && localStorage.removeItem("accessToken");
     typeof window !== "undefined" && localStorage.removeItem("userInfo");
+    router.push("/auth/login");
   };
 
   let getUserDetails = async () => {

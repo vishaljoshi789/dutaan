@@ -3,22 +3,18 @@ from django.db import models
 
 
 def user_directory_path(instance, filename): 
-  
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
     return 'user_{0}/{1}'.format(instance.username, filename) 
+
+def vendor_directory_path(instance, filename): 
+    return 'user_{0}/{1}'.format(instance.user.username, filename) 
+
 def video_directory_path(instance, filename): 
-  
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
     return 'product_{0}/{1}'.format(instance.name, filename) 
 
 def image_directory_path(instance, filename): 
-  
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
     return 'product_{0}/{1}'.format("image", filename) 
 
 def website_images_path(instance, filename): 
-  
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
     return 'website_{0}/{1}'.format("image", filename)
 
 class CustomUser(AbstractUser):
@@ -55,21 +51,18 @@ class Vendor(models.Model):
     store_description = models.TextField(null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     gst = models.CharField(max_length=20, null=True, blank=True)
-    aadhar = models.CharField(max_length=15, null=True, blank=True)
+    aadhar = models.ImageField(upload_to=vendor_directory_path, null=True, blank=True)
 
 class Category(models.Model):
     category = models.CharField(max_length = 100, null=True, blank=True)
-    image = models.ImageField(upload_to=website_images_path, null=True, blank=True)
+    # image = models.ImageField(upload_to=website_images_path, null=True, blank=True)
 
     def __str__(self):
         return self.category
 
 class Event(models.Model):
     event = models.CharField(max_length = 100, null=True, blank=True)
-    image = models.ImageField(upload_to=website_images_path, null=True, blank=True)
-
-    
-
+    # image = models.ImageField(upload_to=website_images_path, null=True, blank=True)
 
 class Product(models.Model):
     status_choices = {"Active": "Active", "Inactive":"Inactive", "Banned":"Banned"}
@@ -85,7 +78,7 @@ class Product(models.Model):
     status = models.CharField(default="Active", max_length=10, null=True, blank=True, choices=status_choices)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    
+    customizable = models.BooleanField(default=False)
     def __str__(self):
         return str(self.id)
 
@@ -158,3 +151,13 @@ class Payment(models.Model):
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField(auto_now_add=True)
     is_paid = models.BooleanField(default=False)
+
+class ChatBox(models.Model):
+    order = models.ForeignKey(Order, related_name='chat_order', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='chat_product', on_delete=models.CASCADE)
+
+class ChatContent(models.Model):
+    chat = models.ForeignKey(ChatBox, on_delete=models.CASCADE, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    user = models.ForeignKey(CustomUser, related_name='chat_user', on_delete=models.CASCADE)
+

@@ -1,15 +1,18 @@
-"use client"
-import Link from 'next/link';
-import React, { useContext } from 'react'
-import { redirect, usePathname } from 'next/navigation';
-import AuthContext from '../context/AuthContext';
+"use client";
+import React, { useContext } from "react";
+import { usePathname } from "next/navigation";
+import AuthContext from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
-const PrivateRoute = ({children, ...rest}) => {
-    let path = usePathname()
-    let { user } = useContext(AuthContext)
+const PrivateRoute = ({ children, ...rest }) => {
+  let router = useRouter();
+  let path = usePathname();
+  let { user } = useContext(AuthContext);
   return (
-    <div {...rest} >{ (!user && (path !== "/auth/login")) ? redirect('/auth/login') :children}</div>
-  )
-}
+    <div {...rest}>
+      {!user && path !== "/auth/login" ? router.push("/auth/login") : children}
+    </div>
+  );
+};
 
-export default PrivateRoute
+export default PrivateRoute;

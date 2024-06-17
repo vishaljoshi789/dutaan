@@ -17,11 +17,13 @@ def user_registration(request):
         data["address"] = json.loads(request.data["address"])
         print(data)
         image = data.pop("user_image") if data["user"]["role"] == 'Vendor' else None
+        aadhar = data.pop("aadhar") if data["user"]["role"] == 'Vendor' else None
         # request.data["user"]["image"] = image
         data = data.dict()
         data = json.dumps(data)
         data = json.loads(data)
         data["user"]["image"] = image[0] if data["user"]["role"] == 'Vendor' else None
+        data["aadhar"] = aadhar[0] if data["user"]["role"] == 'Vendor' else None
         serializer = VendorSerializer(data=data) if data["user"]["role"] == 'Vendor' else CustomerSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
