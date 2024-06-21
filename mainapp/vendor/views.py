@@ -94,10 +94,11 @@ def update_product(request):
         product.specifications.all().delete()
         product.category.all().delete()
         product.event.all().delete()
+        print(product.category.all())
         data["specifications"] = json.loads(request.data["specification"])
         data["category"] = json.loads(request.data["category"])
         data["event"] = json.loads(request.data["event"])
-        print(request.FILES)
+        print(request.data)
         image = request.FILES.pop('image', None)
         images = []
         category = []
@@ -137,7 +138,6 @@ def update_product(request):
         serializer = ProductSerializer(product, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

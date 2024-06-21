@@ -124,12 +124,12 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'category', 'image']
+        fields = ['id', 'category']
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'event', 'image']
+        fields = ['id', 'event']
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -151,7 +151,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'images', 'image', 'specifications', 'category', 'event', 'name', 'description', 'mrp', 'sell_price', 'price', 'stock_quantity', 'status', 'vendor', 'video']
+        fields = ['id', 'images', 'image', 'specifications', 'category', 'event', 'name', 'description', 'mrp', 'sell_price', 'price', 'stock_quantity', 'customizable', 'status', 'vendor', 'video']
 
     def create(self, validated_data):
         images_data = validated_data.pop('images', [])
