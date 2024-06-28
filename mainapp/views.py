@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login
-from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent, Address, Order, OrderItem
-from .serializers import UserSerializer, OrderItemProductSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer, OrderSerializer, OrderItemSerializer, PaymentSerializer
+from .models import CustomUser, Product, Customer, Vendor, Category, Event, Wishlist, Cart, ProductCategory, ProductEvent, Address, Order, OrderItem, ChatBox, ChatContent
+from .serializers import UserSerializer, OrderItemProductSerializer, ProductSerializer, EventSerializer,ProductCategorySerializer, ProductEventSerializer, CategorySerializer, AddressSerializer, VendorSerializer, CustomerSerializer, WishlistSerializer, CartSerializer, OrderSerializer, OrderItemSerializer, PaymentSerializer, ChatBoxSerializer, ChatContentSerializer
 from rest_framework.permissions import IsAuthenticated
 import json
 from django.db.models import Q
@@ -367,6 +367,40 @@ def add_payment(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_chat_rooms(request):
+    customer = Customer.objects.get(user = request.user)
+    chat = ChatBox.objects.all().filter(customer=customer)
+    serializer = ChatBoxSerializer(chat, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_chat_room_chats(request):
+    customer = Customer.objects.get(user = request.user)
+    chat = ChatBox.objects.get_or_create(customer=customer, product_id=request.GET.get('id'))
+    chats = chat[0].chat_content.all()
+    serializer = ChatContentSerializer(chats, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def send_message(request):
+    if request.method == 'POST':
+        data = request.data
+        data['user'] = request.user.id
+        serializer = ChatContentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

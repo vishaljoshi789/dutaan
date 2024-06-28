@@ -29,5 +29,8 @@ urlpatterns = [
     path('getOrderItems/', views.get_order_items),
     path('getOrder/', views.get_order_details),
     path('addPayment/', views.add_payment),
+    path('getChatBox/', views.get_chat_rooms),
+    path('getChatBoxContent/', views.get_chat_room_chats),
+    path('sendMessage/', views.send_message),
 
 ]

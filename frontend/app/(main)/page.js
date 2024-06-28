@@ -139,40 +139,43 @@ export default function Home() {
         </form>
       </div>
 
-      <div className="flex gap-5 justify-evenly">
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">Mother's Day</span>
+      <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+        <div className="flex gap-5 justify-evenly p-5">
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">Mother's Day</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">Birthday</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">Best of Personalised</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">Best of Flowers</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">Eggless Cakes</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">For Kids</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">For Him</span>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
+            <span className="text-sm">For Her</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">Birthday</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">Best of Personalised</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">Best of Flowers</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">Eggless Cakes</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">For Kids</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">For Him</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="w-28 h-28 bg-gray-500 rounded-2xl"></div>
-          <span className="text-sm">For Her</span>
-        </div>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       <div className="birthday_gift p-3">
         <h2 className="text-red-500 font-bold">Birthday Gifts</h2>
@@ -250,6 +253,7 @@ export default function Home() {
               </span>
             </div>
           </div>
+          <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
       <div className="stories p-3">
@@ -273,6 +277,7 @@ export default function Home() {
               <span>Mugs</span>
             </div>
           </div>
+          <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
     </div>

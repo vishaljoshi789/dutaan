@@ -17,6 +17,9 @@ def image_directory_path(instance, filename):
 def website_images_path(instance, filename): 
     return 'website_{0}/{1}'.format("image", filename)
 
+def website_chats_path(instance, filename): 
+    return 'website_chats_{0}/{1}'.format("image", filename)
+
 class CustomUser(AbstractUser):
     status_choices = {"Active": "Active", "Inactive":"Inactive"}
     name = models.CharField(max_length = 50, null=True, blank=True)
@@ -153,11 +156,14 @@ class Payment(models.Model):
     is_paid = models.BooleanField(default=False)
 
 class ChatBox(models.Model):
-    order = models.ForeignKey(Order, related_name='chat_order', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name='chat_product', on_delete=models.CASCADE)
+    # vendor = models.ForeignKey(Vendor, related_name='chat_vendor', on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey(Customer, related_name='chat_customer', on_delete=models.CASCADE, null=True, blank=True)
+    product = models.ForeignKey(Product, related_name='chat_product', on_delete=models.CASCADE, null=True, blank=True)
 
 class ChatContent(models.Model):
-    chat = models.ForeignKey(ChatBox, on_delete=models.CASCADE, null=True, blank=True)
+    chat = models.ForeignKey(ChatBox, on_delete=models.CASCADE, null=True, blank=True, related_name='chat_content')
     message = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to=website_chats_path, null=True, blank=True)
     user = models.ForeignKey(CustomUser, related_name='chat_user', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 

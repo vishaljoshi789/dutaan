@@ -3,6 +3,7 @@ import "../globals.css";
 import Navbar from "../components/CustomerNavbar";
 import { AuthProvider } from "../context/AuthContext";
 import { Toaster } from "sonner";
+import VendorRoute from "../utils/VendorRoute";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,9 +17,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <Navbar />
-          <main className=" bg-[#F5f5dc] min-h-[100vh]">{children}</main>
-          <Toaster richColors />
+          <VendorRoute>
+            <Navbar />
+            <main className=" bg-[#F5f5dc] min-h-[100vh]">{children}</main>
+            <Toaster richColors />
+          </VendorRoute>
         </AuthProvider>
       </body>
     </html>

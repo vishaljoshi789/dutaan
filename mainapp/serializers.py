@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Product, Address, Customer, Event, Vendor, Product, ProductImage, ProductSpecification, Category, ProductCategory, ProductEvent, Wishlist, Cart, Order, OrderItem, Payment
+from .models import CustomUser, Product, Address, Customer, Event, Vendor, Product, ProductImage, ProductSpecification, Category, ProductCategory, ProductEvent, Wishlist, Cart, Order, OrderItem, Payment, ChatBox, ChatContent
 from django.contrib.auth.hashers import make_password
 
 
@@ -231,4 +231,15 @@ class OrderItemProductSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
+        fields = '__all__'
+
+class ChatBoxSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+    class Meta:
+        model = ChatBox
+        fields = '__all__'
+
+class ChatContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatContent
         fields = '__all__'
