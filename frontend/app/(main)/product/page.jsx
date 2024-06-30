@@ -18,6 +18,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import Link from "next/link";
 
 export default function Product() {
   let router = useRouter();
@@ -102,7 +103,7 @@ export default function Product() {
   }, []);
 
   return (
-    <section className="text-gray-600 body-font">
+    <section className="text-gray-600 body-font min-h-screen pt-10">
       <div className="">
         <div className="lg:w-4/5 w-full mx-auto flex flex-wrap">
           <div className="w-full lg:w-1/2">
@@ -229,9 +230,12 @@ export default function Product() {
 
               <div className="flex items-center gap-10 my-5">
                 {productInfo.customizable && (
-                  <div className="bg-[#F5F5DC] shadow-lg rounded-full p-2">
+                  <Link
+                    className="bg-[#F5F5DC] shadow-lg rounded-full p-2"
+                    href={`/chat?proid=${productInfo.id}&id=null`}
+                  >
                     <Image src="/images/chat.png" height={30} width={30} />
-                  </div>
+                  </Link>
                 )}
                 <button className="flex text-white bg-indigo-500 border-0 focus:outline-none hover:bg-indigo-600 rounded">
                   <Image

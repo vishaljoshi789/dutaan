@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <AuthProvider>
           <Navbar />
-          <main className=" bg-[#F5f5dc] min-h-[100vh]">{children}</main>
+          <main className=" bg-[#F5f5dc]">{children}</main>
           <Toaster richColors />
         </AuthProvider>
       </body>

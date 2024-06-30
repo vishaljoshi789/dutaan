@@ -372,8 +372,14 @@ def add_payment(request):
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_chat_rooms(request):
-    customer = Customer.objects.get(user = request.user)
-    chat = ChatBox.objects.all().filter(customer=customer)
+    if request.user.role == 'Customer':
+        customer = Customer.objects.get(user = request.user)
+        chat = ChatBox.objects.all().filter(customer=customer)
+    else:
+        vendor = Vendor.objects.get(user=request.user)
+        products = vendor.product_set.all()
+        chat = ChatBox.objects.all().filter(product__in=products)
+
     serializer = ChatBoxSerializer(chat, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -381,9 +387,19 @@ def get_chat_rooms(request):
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_chat_room_chats(request):
-    customer = Customer.objects.get(user = request.user)
-    chat = ChatBox.objects.get_or_create(customer=customer, product_id=request.GET.get('id'))
-    chats = chat[0].chat_content.all()
+    if request.user.role == 'Customer':
+        customer = Customer.objects.get(user = request.user)
+        if request.GET.get('id')!='null' and ChatBox.objects.filter(id=request.GET.get('id')).count()>0:
+            chat = ChatBox.objects.filter(id=request.GET.get('id'))
+        elif request.GET.get('proid')!='null':
+            chat = ChatBox.objects.get_or_create(customer=customer, product_id=request.GET.get('proid'))
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        chats = chat[0].chat_content.all()
+    else:
+        #  vendor = Vendor.objects.get(user=request.user)
+         chat = ChatBox.objects.get(id=request.GET.get('id'))
+         chats = chat.chat_content.all()
     serializer = ChatContentSerializer(chats, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
